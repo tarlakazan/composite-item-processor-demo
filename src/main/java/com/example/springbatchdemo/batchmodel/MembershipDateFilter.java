@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 public class MembershipDateFilter implements ItemProcessor<Member, Member> {
     @Override
-    public Member process(Member employee){
-        LocalDate date = LocalDate.parse(employee.getMembershipDate());
+    public Member process(Member member){
+        LocalDate date = LocalDate.parse(member.getMembershipDate());
         if(date.isBefore(LocalDate.now().minusMonths(6))){
-            return employee;
+            return member;
         }
         return null;
     }

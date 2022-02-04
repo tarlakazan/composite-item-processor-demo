@@ -1,71 +1,23 @@
 package com.example.springbatchdemo.domain;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Member {
 
-    public Member(String id, String toLowerCase, String toUpperCase) {
-        this.id=id;
-        this.firstName=toLowerCase;
-        this.lastName=toUpperCase;
-    }
-
-    public Member(String id, String fullName) {
-        this.id=id;
-        this.fullName=fullName;
-    }
-
-    public Member(){
-
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    String id;
-    String firstName;
-    String lastName;
-
-
-
-    String fullName;
-
-    public String getMembershipDate() {
-        return membershipDate;
-    }
-
-    public void setMembershipDate(String membershipDate) {
-        this.membershipDate = membershipDate;
-    }
-
-    String membershipDate;
+    private String id;
+    private String firstName;
+    private String lastName;
+    private String fullName;
+    private String membershipDate;
 
     @Override
     public String toString() {

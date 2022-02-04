@@ -40,6 +40,7 @@ public class BatchConfiguration {
     @Value("${file.input}")
     private String fileInput;
 
+
     @Bean
     public FlatFileItemReader<Member> reader() {
 
@@ -66,7 +67,7 @@ public class BatchConfiguration {
 
 
     @Bean
-    public Job importUserJob(Step mainStep) {
+    public Job importMemberJob(Step mainStep) {
         return jobBuilderFactory.get("validateMemberJob")
                 .incrementer(new RunIdIncrementer())
                 .flow(mainStep)
@@ -105,7 +106,6 @@ public class BatchConfiguration {
 
         List<ItemProcessor<Member, Member>> processors = Arrays.asList(memberIdValidator(),membershipDateFilter(),
                 memberNameMerger());
-
         processor.setDelegates(processors);
         processor.afterPropertiesSet();
 
@@ -117,6 +117,8 @@ public class BatchConfiguration {
     {
         return new ConsoleItemWriter<Member>();
     }
+
+
 
 
 
