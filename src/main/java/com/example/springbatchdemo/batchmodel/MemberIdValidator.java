@@ -11,7 +11,7 @@ public class MemberIdValidator implements ItemProcessor<Member, Member> {
     @Override
     public Member process(Member member){
         String memberId= member.getId();
-        if(memberId.length()==9 || memberId.startsWith("8")){
+        if(memberId.length()==9 && memberId.startsWith("8")){
             return member;
         }
       return null;

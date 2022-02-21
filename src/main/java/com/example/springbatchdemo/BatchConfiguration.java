@@ -1,6 +1,5 @@
 package com.example.springbatchdemo;
 
-import com.example.springbatchdemo.batchmodel.ConsoleItemWriter;
 import com.example.springbatchdemo.batchmodel.MemberIdValidator;
 import com.example.springbatchdemo.batchmodel.MemberNameMerger;
 import com.example.springbatchdemo.batchmodel.MembershipDateFilter;
@@ -13,8 +12,11 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.FlatFileItemWriter;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor;
+import org.springframework.batch.item.file.transform.DelimitedLineAggregator;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +43,8 @@ public class BatchConfiguration {
 
     @Value("${file.input}")
     private String fileInput;
+
+   private Resource outputResource = new FileSystemResource("outputData.csv");
 
 
     @Bean
@@ -81,7 +87,7 @@ public class BatchConfiguration {
                 .<Member, Member> chunk(10)
                 .reader(reader())
                 .processor(compositeItemProcessor())
-                .writer(consoleItemWriter())
+                .writer(flatFileItemWriter())
                 .build();
     }
 
@@ -112,10 +118,24 @@ public class BatchConfiguration {
         return processor;
     }
 
+
     @Bean
-    public ConsoleItemWriter<Member> consoleItemWriter()
+    public FlatFileItemWriter<Member> flatFileItemWriter()
     {
-        return new ConsoleItemWriter<Member>();
+
+        FlatFileItemWriter<Member> writer = new FlatFileItemWriter<>();
+        writer.setResource(new FileSystemResource("outputData.csv"));
+        writer.setLineAggregator(new DelimitedLineAggregator<Member>() {
+            {
+                setDelimiter(",");
+                setFieldExtractor(new BeanWrapperFieldExtractor<Member>() {
+                    {
+                        setNames(new String[] { "id", "fullName", "membershipDate" });
+                    }
+                });
+            }
+        });
+        return writer;
     }
 
 
